@@ -10,6 +10,7 @@ def named_person():
         "plz": "3000",
         "city": "Bern",
         "birthdate": datetime.date(2001, 4, 7),
+        "gender": "f",
         "contact": {
             "mobile": "079987 65 43",
             "email": "aline.alma@abc.ch",
