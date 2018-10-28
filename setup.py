@@ -8,5 +8,5 @@ setup(
     author_email="jonas.hagen3@gmail.com",
     description="Tools to manage a course.",
     packages=find_packages(),
-    install_requires=["wheel", "pyyaml"],
+    install_requires=["wheel", "pyyaml", "phonenumbers"],
 )
