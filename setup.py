@@ -9,5 +9,5 @@ setup(
     description="Tools to manage a course.",
     packages=['ofcourse'],
     scripts=['scripts/ofc.py'],
-    install_requires=["wheel", "ruamel.yaml", "phonenumbers", "docopt"],
+    install_requires=["wheel", "ruamel.yaml", "phonenumbers", "docopt", "tabulate"],
 )
