@@ -7,6 +7,7 @@ setup(
     author="Jonas Hagen",
     author_email="jonas.hagen3@gmail.com",
     description="Tools to manage a course.",
-    packages=find_packages(),
-    install_requires=["wheel", "pyyaml", "phonenumbers"],
+    packages=['ofcourse'],
+    scripts=['scripts/ofc.py'],
+    install_requires=["wheel", "ruamel.yaml", "phonenumbers", "docopt"],
 )

@@ -8,7 +8,7 @@ class PersonError(Exception):
     pass
 
 
-def dump_people(filename, people, use_omap=False):
+def dump(filename, people, use_omap=False):
     people = normalize_people(people)
     y = yaml.YAML()
     if not use_omap:
