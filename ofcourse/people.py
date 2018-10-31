@@ -52,10 +52,8 @@ def normalize_person(person, name=None):
             if t not in c_fields:
                 raise PersonError(f"{name}: unknown contact type {t}")
             if isinstance(vs, str):
-                is_single = True
                 vs = [vs]
             elif isinstance(vs, list):
-                is_single = False
                 pass
             else:
                 raise PersonError(
@@ -76,7 +74,7 @@ def normalize_person(person, name=None):
                         phonenumbers.format_number(
                             phone,
                             phonenumbers.PhoneNumberFormat.INTERNATIONAL))
-            person["contact"][t] = valid_vs[0] if is_single else valid_vs
+            person["contact"][t] = valid_vs[0] if len(valid_vs) == 1 else valid_vs
         person['contact'] = OrderedDict(
             sorted(
                 person['contact'].items(),
