@@ -8,14 +8,15 @@ class PersonError(Exception):
     pass
 
 
-def dump(filename, people, use_omap=False):
+def dump(f, people, use_omap=False):
     people = normalize_people(people)
     y = yaml.YAML()
     if not use_omap:
         y.representer.add_representer(
             OrderedDict, yaml.representer.RoundTripRepresenter.represent_dict)
-    with open(filename, 'w') as f:
-        y.dump(people, f)
+    for name, person in people.items():
+        y.dump({name: person}, f)
+        print('', file=f)
 
 
 def normalize_people(people):
