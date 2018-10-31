@@ -30,11 +30,16 @@ def normalize_person(person, name=None):
     "Check and normalize a person."
 
     fields = [
-        'adress', 'city', 'plz', 'birthdate', 'gender', 'contact', 'notes'
+        'first_name', 'last_name', 'adress', 'city', 'plz', 'birthdate',
+        'gender', 'contact', 'notes'
     ]
     for k in person:
         if k not in fields:
             raise PersonError(f'{name}: unknown field {k}')
+
+    if 'first_name' in person and 'last_name' in person:
+        if person['first_name'] + ' ' + person['last_name'] != name:
+            raise PersonError("{}: inconsistent names".format(name))
 
     if "birthdate" in person:
         if not isinstance(person["birthdate"], datetime.date):
