@@ -8,6 +8,6 @@ setup(
     author_email="jonas.hagen3@gmail.com",
     description="Tools to manage a course.",
     packages=['ofcourse'],
-    scripts=['scripts/ofc.py'],
+    scripts=['scripts/ofc'],
     install_requires=["wheel", "ruamel.yaml", "phonenumbers", "docopt", "tabulate", "click"],
 )
