@@ -1,27 +1,41 @@
 #! /usr/bin/env python3
-"""
-Manage a course.
-
-Usage:
-  ofc.py people normalize <file>
-  ofc.py course print <course-file> [<people-file>]
-
-"""
-from docopt import docopt
+import click
 from ofcourse import people
 from ruamel import yaml
 from tabulate import tabulate
 
 
+@click.group()
+def cli():
+    pass
+
+
+@cli.group("people")
+def people_group():
+    pass
+
+
+@cli.group("course")
+def course_group():
+    pass
+
+
+@people_group.command("normalize")
+@click.argument("filename", default="./people.yml", type=click.Path(exists=True, dir_okay=False, writable=True))
 def people_normalize(filename):
     y = yaml.YAML()
     with open(filename, 'r') as f:
         p = y.load(f)
-    people.dump(filename, p)
+    if p is None:
+        exit()
+    with open(filename, 'w') as f:
+        people.dump(f, p)
 
 
-def course_print(filename, people_file=None):
-    people_file = people_file or 'people.yml'
+@course_group.command("print")
+@click.argument("filename", type=click.Path(exists=True, dir_okay=False))
+@click.argument("people-file", default="./people.yml", type=click.Path(exists=True, dir_okay=False))
+def course_print(filename, people_file):
     y = yaml.YAML()
     with open(filename, 'r') as f:
         c = y.load(f)
@@ -43,15 +57,5 @@ def course_print(filename, people_file=None):
     print(tabulate(simple_list, headers=['Name', 'Jg.', 'Notfallnummer']))
 
 
-def main(args):
-    if args['people']:
-        if args['normalize']:
-            people_normalize(args['<file>'])
-    if args['course']:
-        if args['print']:
-            course_print(args['<course-file>'], args['<people-file>'])
-
-
 if __name__ == '__main__':
-    args = docopt(__doc__, version='OfCOurse 1.0')
-    main(args)
+    cli()
