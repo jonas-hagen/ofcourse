@@ -1,9 +1,9 @@
 #! /usr/bin/env python3
+import sys
 import click
-from ofcourse import people
-from ruamel import yaml
 from tabulate import tabulate
-
+from ofcourse import dumpers
+from ofcourse import parsers
 
 @click.group()
 def cli():
@@ -23,38 +23,23 @@ def course_group():
 @people_group.command("normalize")
 @click.argument("filename", default="./people.yml", type=click.Path(exists=True, dir_okay=False, writable=True))
 def people_normalize(filename):
-    y = yaml.YAML()
     with open(filename, 'r') as f:
-        p = y.load(f)
-    if p is None:
+        person_list = parsers.person_list_parser(f)
+    if not person_list:
         exit()
     with open(filename, 'w') as f:
-        people.dump(f, p)
+        dumpers.person_list_yaml_dumper(f, person_list)
 
 
 @course_group.command("print")
 @click.argument("filename", type=click.Path(exists=True, dir_okay=False))
 @click.argument("people-file", default="./people.yml", type=click.Path(exists=True, dir_okay=False))
 def course_print(filename, people_file):
-    y = yaml.YAML()
-    with open(filename, 'r') as f:
-        c = y.load(f)
     with open(people_file, 'r') as f:
-        ps = people.normalize_people(y.load(f))
-
-    print(c['title'])
-    print('='*len(c['title']))
-    print()
-    print('from {from} to {to}'.format(**c))
-    print()
-
-    simple_list = []
-    for name in c['people']:
-        p = ps[name]
-        ice = p['contact']['emergency']
-        ice = [ice] if isinstance(ice, str) else ice
-        simple_list.append([name, str(p['birthdate'].year), ' / '.join(ice)])
-    print(tabulate(simple_list, headers=['Name', 'Jg.', 'Notfallnummer']))
+        person_list = parsers.person_list_parser(f)
+    with open(filename, 'r') as f:
+        course = parsers.course_parser(f, person_list)
+    dumpers.course_text_dumper(sys.stdout, course)
 
 
 if __name__ == '__main__':
