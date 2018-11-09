@@ -6,12 +6,12 @@ from ofcourse import models
 
 
 def person_list_serializer(person_list):
-    persons = list()
+    persons = OrderedDict()
     for p in sorted(person_list, key=models.Person.key):
         cs = contact_list_serializer(p.contact)
         ps = asdict(p, dict_factory=OrderedDict)
         ps["contact"] = cs
-        persons.append(ps)
+        persons[p.full_name] = ps
     return persons
 
 

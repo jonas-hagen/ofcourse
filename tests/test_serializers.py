@@ -23,5 +23,7 @@ def test_person_list_serializer():
 
     d = serializers.person_list_serializer([p2, p1])
 
-    assert d[0]["first_name"] == "Aline"
-    assert isinstance(d[0]["contact"]["mobile"], list)
+    d_vals = list(d.values())
+    assert list(d.keys()) == ["Aline Alma", "David Düber"]
+    assert d_vals[0]["first_name"] == "Aline"
+    assert isinstance(d_vals[0]["contact"]["mobile"], list)
