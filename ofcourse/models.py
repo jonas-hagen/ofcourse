@@ -57,6 +57,10 @@ class Person:
     def full_name(self):
         return self.first_name + " " + self.last_name
 
+    @classmethod
+    def key(cls, obj):
+        return obj.full_name, obj.birthdate
+
     def normalize(self):
         if self.gender:
             if self.gender not in ("o", "f", "m"):
