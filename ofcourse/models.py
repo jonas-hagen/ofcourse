@@ -9,6 +9,7 @@ import phonenumbers
 class Contact:
     channel: str
     address: str
+    order: int = field(repr=False, default=0)
 
     def __post_init__(self):
         self.normalize()
@@ -17,7 +18,17 @@ class Contact:
     def is_phone(self):
         return self.channel in ("mobile", "phone", "emergency")
 
+    @classmethod
+    def _get_channel_order(cls):
+        return ("mobile", "phone", "email", "emergency")
+
+    @classmethod
+    def key(cls, obj):
+        return cls._get_channel_order().index(obj.channel), obj.order
+
     def normalize(self):
+        if self.channel not in self._get_channel_order():
+            raise ValueError("Unknown channel " + self.channel)
         if self.is_phone:
             phone = phonenumbers.parse(self.address, "CH")
             if not phonenumbers.is_valid_number(phone):
