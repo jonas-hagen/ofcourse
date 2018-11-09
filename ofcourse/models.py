@@ -78,8 +78,8 @@ class Person:
 @dataclass
 class Course:
     title: str
-    start: datetime.date = field(default=None)
-    end: datetime.date = field(default=None)
+    first_date: datetime.date = field(default=None)
+    last_date: datetime.date = field(default=None)
     number: int = field(repr=False, default=0)
     code: str = field(default="")
     participants: typing.List[Person] = field(repr=False, default_factory=list)

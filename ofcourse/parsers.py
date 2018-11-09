@@ -25,3 +25,12 @@ def person_list_parser(f):
         lst.append(models.Person(**p_dict))
 
     return lst
+
+
+def course_parser(f, person_list):
+    y = yaml.YAML()
+    course_dict = y.load(f)
+    person_dict = {p.full_name: p for p in person_list}
+    course_dict['participants'] = [person_dict[name] for name in course_dict['participants']]
+    course =  models.Course(**course_dict)
+    return course

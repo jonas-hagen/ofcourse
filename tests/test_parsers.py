@@ -1,4 +1,5 @@
 from ofcourse import parsers
+from ofcourse import models
 import io
 
 
@@ -31,3 +32,21 @@ David Dünk:
 
     person_list = parsers.person_list_parser(io.StringIO(s))
     assert person_list[0].first_name == "Alice"
+
+
+def test_course_parser():
+    p = models.Person("Alice", "Alma", "Hüntzi 3", "Bern", "3007")
+    s = """
+title: Kurs Laber
+
+first_date: 2018-08-08
+last_date: 2018-12-20
+
+participants:
+- Alice Alma
+    """
+
+    course = parsers.course_parser(io.StringIO(s), [p])
+
+    assert course.title == "Kurs Laber"
+    assert course.participants[0] == p
