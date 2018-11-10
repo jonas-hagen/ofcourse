@@ -7,7 +7,15 @@ setup(
     author="Jonas Hagen",
     author_email="jonas.hagen3@gmail.com",
     description="Tools to manage a course.",
-    packages=['ofcourse'],
-    scripts=['scripts/ofc'],
-    install_requires=["wheel", "ruamel.yaml", "phonenumbers", "docopt", "tabulate", "click"],
+    packages=["ofcourse"],
+    scripts=["scripts/ofc"],
+    install_requires=[
+        "wheel",
+        "ruamel.yaml",
+        "phonenumbers",
+        "docopt",
+        "tabulate",
+        "click",
+        "jinja2",
+    ],
 )
