@@ -58,6 +58,10 @@ class Person:
     def full_name(self):
         return self.first_name + " " + self.last_name
 
+    @property
+    def identifier(self):
+        return self.full_name.replace(" ", "_")
+
     @classmethod
     def key(cls, obj):
         return obj.full_name, obj.birthdate

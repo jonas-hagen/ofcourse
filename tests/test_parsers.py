@@ -12,7 +12,7 @@ def test_contacts_to_list():
 
 def test_parse_people():
     s = """
-Alice Alma:
+Alice_Alma:
   adress: Albertstrasse 8
   city: Bern
   plz: '3000'
@@ -26,7 +26,7 @@ Alice Alma:
     - +41 79 123 23 44
     - +41 31 768 83 38
 
-David Dünk:
+David_Dünk:
     birthdate: 1999-04-10
     """
 
@@ -43,7 +43,7 @@ first_date: 2018-08-08
 last_date: 2018-12-20
 
 participants:
-- Alice Alma
+- Alice_Alma
     """
 
     course = parsers.course_parser(io.StringIO(s), [p])
