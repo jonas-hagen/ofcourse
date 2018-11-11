@@ -67,13 +67,19 @@ class Person:
             if self.gender not in ("o", "f", "m"):
                 raise ValueError("Unknown gender " + self.gender)
         if self.plz:
+            if isinstance(self.plz, int):
+                self.plz = str(self.plz)
+            if "-" in self.plz:
+                country, plz = self.plz.split("-")
+                self.country = country
+                self.plz = plz
             try:
-                if "-" in self.plz:
-                    int(self.plz.split("-")[1])
-                else:
-                    int(self.plz)
+                int(self.plz)
             except ValueError as e:
                 raise ValueError("Invalid plz code " + self.plz)
+        if self.notes:
+            if not isinstance(self.notes, (tuple, list)):
+                self.notes = [self.notes]
 
 
 @dataclass

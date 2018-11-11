@@ -55,9 +55,7 @@ def course_print(filename, people_file):
 @click.argument(
     "filename", type=click.Path(exists=True, dir_okay=False, resolve_path=True)
 )
-@click.argument(
-    "template-file", type=click.Path(exists=True, dir_okay=False)
-)
+@click.argument("template-file", type=click.Path(exists=True, dir_okay=False))
 @click.argument(
     "people-file",
     default="./people.yml",
