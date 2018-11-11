@@ -11,7 +11,7 @@ def person_list_serializer(person_list):
         cs = contact_list_serializer(p.contact)
         ps = asdict(p, dict_factory=OrderedDict)
         ps["contact"] = cs
-        persons[p.full_name] = ps
+        persons[p.identifier] = ps
     return persons
 
 
@@ -29,5 +29,5 @@ def contact_list_serializer(contact_list):
 
 def course_serializer(course):
     cs = asdict(course, dict_factory=OrderedDict)
-    cs["participants"] = [p.full_name for p in course.participants]
+    cs["participants"] = [p.identifier for p in course.participants]
     return cs
