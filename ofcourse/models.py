@@ -93,6 +93,7 @@ class Course:
     last_date: datetime.date = field(default=None)
     number: int = field(repr=False, default=0)
     code: str = field(default="")
+    costs: float = field(default=0)
     notes: typing.List[str] = field(repr=False, default_factory=list)
     participants: typing.List[Person] = field(repr=False, default_factory=list)
     waitlist: typing.List[str] = field(repr=False, default_factory=list)
