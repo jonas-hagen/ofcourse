@@ -97,3 +97,4 @@ class Course:
     notes: typing.List[str] = field(repr=False, default_factory=list)
     participants: typing.List[Person] = field(repr=False, default_factory=list)
     waitlist: typing.List[str] = field(repr=False, default_factory=list)
+    instructors: typing.List[Person] = field(repr=False, default_factory=list)
