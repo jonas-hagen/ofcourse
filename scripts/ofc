@@ -75,33 +75,55 @@ def course_print(filename, people_file):
     help="Overwrite existing files, only if output is specified.",
 )
 @click.option(
+    "--each-person/--whole-course",
+    default=False,
+    help="Write a file for each course / person.",
+)
+@click.option(
     "--env",
     "-e",
     default="default",
     help="Jinja2 enviroment to use: " + ", ".join(renderer.environments.keys()),
     type=click.Choice(list(renderer.environments.keys())),
 )
-def course_render(filename, template_file, people_file, output, force, env):
-    if output is None:
-        # base of coursefle, ext of template
-        output = path.dirname(filename)
-    if path.isdir(output):
-        force = False
-        dirname = output
-        base = path.basename(path.splitext(filename)[0])
-        ext = path.splitext(template_file)[1]
-        output = path.join(dirname, base + ext)
-    print(output)
-    if path.isfile(output) and not force:
-        raise FileExistsError(output)
+def course_render(
+    filename, template_file, people_file, output, force, each_person, env
+):
     with open(people_file, "r") as f:
         person_list = parsers.person_list_parser(f)
     with open(filename, "r") as f:
         course = parsers.course_parser(f, person_list)
 
-    with open(output, "w") as f:
-        f.write(renderer.render(template_file, env, c=course))
+    if output is None:
+        # base of coursefle, ext of template
+        output = path.dirname(filename)
 
+    if not each_person:
+        if path.isdir(output):
+            force = False
+            dirname = output
+            base = path.basename(path.splitext(filename)[0])
+            ext = path.splitext(template_file)[1]
+            output = path.join(dirname, base + ext)
+        if path.isfile(output) and not force:
+            raise FileExistsError(output)
+
+        with open(output, "w") as f:
+            f.write(renderer.render(template_file, env, c=course))
+        print(output)
+    else:
+        if not path.isdir(output):
+            raise FileNotFoundError("Directory " + output)
+        else:
+            dirname = output
+            base = path.basename(path.splitext(filename)[0])
+            ext = path.splitext(template_file)[1]
+
+        for person in course.participants:
+            output = path.join(dirname, base + "_" + person.identifier + ":2,DS")
+            with open(output, "w") as f:
+                f.write(renderer.render(template_file, env, p=person, c=course))
+            print(output)
 
 if __name__ == "__main__":
     cli()

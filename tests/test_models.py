@@ -17,6 +17,13 @@ def test_person():
     p.contact.append(c)
     p.birthdate = datetime.date(2010, 1, 5)
 
+def test_person():
+    c1 = models.Contact("email", "mail1@example.com")
+    c2 = models.Contact("email", "mail2@example.com")
+    p = models.Person("Alice", "Alma", "Hüntzi 3", "Bern", "3007")
+    p.contact.append(c1)
+    p.contact.append(c2)
+    assert p.primary_email == "mail1@example.com"
 
 def test_course():
     c = models.Course(title="Laber Blubber")

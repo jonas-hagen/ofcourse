@@ -62,6 +62,10 @@ class Person:
     def identifier(self):
         return self.full_name.replace(" ", "_")
 
+    @property
+    def primary_email(self):
+        return list(filter(lambda c: c.channel == "email", self.contact))[0].address
+
     @classmethod
     def key(cls, obj):
         return obj.full_name, obj.birthdate
