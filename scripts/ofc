@@ -125,5 +125,63 @@ def course_render(
                 f.write(renderer.render(template_file, env, p=person, c=course))
             print(output)
 
+
+@course_group.command("email")
+@click.argument(
+    "subject", type=str,
+)
+@click.argument(
+    "course-file", type=click.Path(exists=True, dir_okay=False, resolve_path=True)
+)
+@click.argument("template-file", type=click.Path(exists=True, dir_okay=False))
+@click.argument(
+    "people-file",
+    default="./people.yml",
+    type=click.Path(exists=True, dir_okay=False, resolve_path=True),
+)
+@click.option(
+    "--test",
+    "-t",
+    "test_addr",
+    default=None,
+    help="Run a test (send to From) or send mails for real.",
+)
+@click.option(
+    "--from", "-f", "from_addr", required=True, help="The From address.",
+)
+def course_email(
+    subject, course_file, template_file, people_file, test_addr, from_addr,
+):
+    import os
+    import smtplib
+    from email.message import EmailMessage
+
+    with open(people_file, "r") as f:
+        person_list = parsers.person_list_parser(f)
+    with open(course_file, "r") as f:
+        course = parsers.course_parser(f, person_list)
+
+    smtp_server = os.environ["SMTP_SERVER"]
+    smtp_user = os.environ["SMTP_USER"]
+    smtp_pass = os.environ["SMTP_PASS"]
+
+    smtp = smtplib.SMTP(smtp_server, port=587)
+    smtp.starttls()
+    smtp.login(smtp_user, smtp_pass)
+
+    for person in course.participants:
+        msg = EmailMessage()
+        body = renderer.render(template_file, "default", p=person, c=course)
+        msg.set_content(body)
+        msg["Subject"] = subject
+        msg["From"] = from_addr
+        to_addr = test_addr or person.primary_email
+        msg["To"] = f"{person.full_name} <{to_addr}>"
+        print("Sending message to: ", msg["To"])
+        smtp.send_message(msg)
+
+    smtp.close()
+
+
 if __name__ == "__main__":
     cli()
