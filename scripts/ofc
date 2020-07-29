@@ -154,6 +154,7 @@ def course_email(
 ):
     import os
     import smtplib
+    import email.utils
     from email.message import EmailMessage
 
     with open(people_file, "r") as f:
@@ -175,6 +176,8 @@ def course_email(
         msg.set_content(body)
         msg["Subject"] = subject
         msg["From"] = from_addr
+        msg["Bcc"] = from_addr
+        msg["Date"] = email.utils.formatdate(localtime=True)
         to_addr = test_addr or person.primary_email
         msg["To"] = f"{person.full_name} <{to_addr}>"
         print("Sending message to: ", msg["To"])
