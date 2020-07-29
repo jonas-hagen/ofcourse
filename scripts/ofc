@@ -217,6 +217,8 @@ def course_email(
         msg = MIMEMultipart()
 
         # Outer headers
+        if test_addr:
+            subject = "[Test] " + subject
         msg["Subject"] = subject
         msg["From"] = from_addr
         msg["Bcc"] = from_addr
