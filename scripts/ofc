@@ -217,10 +217,10 @@ def course_email(
         msg = MIMEMultipart()
 
         # Outer headers
-        if test_addr:
-            subject = "[Test] " + subject
-        msg["Subject"] = subject
+        subject_prefix = "[Test] " if test_addr else ""
+        msg["Subject"] = subject_prefix + subject
         msg["From"] = from_addr
+        msg["Sender"] = from_addr
         msg["Bcc"] = from_addr
         msg["Date"] = email.utils.formatdate(localtime=True)
         to_addr = test_addr or person.primary_email
