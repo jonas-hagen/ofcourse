@@ -146,6 +146,7 @@ def course_render(
     default=None,
     help="Run a test (send to From) or send mails for real.",
 )
+@click.option("--send/--no-send", default=False)
 @click.option(
     "--from", "-f", "from_addr", required=True, help="The From address.",
 )
@@ -153,7 +154,7 @@ def course_render(
     "--attach", "-a", required=False, multiple=True, help="File(s) to attach.",
 )
 def course_email(
-    subject, course_file, template_file, people_file, test_addr, from_addr, attach
+        subject, course_file, template_file, people_file, test_addr, send, from_addr, attach
 ):
     import os
     import smtplib
@@ -176,13 +177,7 @@ def course_email(
     smtp_user = os.environ["SMTP_USER"]
     smtp_pass = os.environ["SMTP_PASS"]
 
-    smtp = smtplib.SMTP(smtp_server, port=587)
-    smtp.starttls()
-    smtp.login(smtp_user, smtp_pass)
-
-    # Attachements
-    attachements = []
-    for filename in attach:
+    def get_attachement(filename):
         filename_base = os.path.basename(filename)
         if not os.path.isfile(filename):
             raise FileNotFoundError(filename)
@@ -191,7 +186,7 @@ def course_email(
             # No guess could be made, or the file is encoded (compressed), so
             # use a generic bag-of-bits type.
             ctype = "application/octet-stream"
-        print(f"Attaching {filename_base} as {ctype}")
+        print(f"  Attaching {filename_base} as {ctype}")
         maintype, subtype = ctype.split("/", 1)
         if maintype == "text":
             with open(filename) as fp:
@@ -211,10 +206,14 @@ def course_email(
             encoders.encode_base64(part)
         # Set the filename parameter
         part.add_header("Content-Disposition", "attachment", filename=filename_base)
-        attachements.append(part)
+        return part
 
+
+    messages = []
     for person in course.participants:
         msg = MIMEMultipart()
+
+        print(f"Preparing message to {person.full_name}")
 
         # Outer headers
         subject_prefix = "[Test] " if test_addr else ""
@@ -232,13 +231,30 @@ def course_email(
         msg.attach(body)
 
         # Attachements
-        for part in attachements:
-            msg.attach(part)
+        for filename in attach:
+            filename_r = renderer.render_string(filename, "default", p=person, c=course)
+            try:
+                part = get_attachement(filename_r)
+            except FileNotFoundError as e:
+                print("  File not found, skipping attach: ", e)
+            else:
+                msg.attach(part)
 
-        print("Sending message to: ", msg["To"])
-        smtp.send_message(msg)
+        messages.append(msg)
 
-    smtp.close()
+    if send and input("Do You Want To Send Messages? [y/N]") == "y":
+        smtp = smtplib.SMTP(smtp_server, port=587)
+        smtp.starttls()
+        smtp.login(smtp_user, smtp_pass)
+
+        for msg in messages:
+            print("Sending message to: ", msg["To"])
+            smtp.send_message(msg)
+
+        smtp.close()
+    else:
+        print("NOT sending messages")
+
 
 
 if __name__ == "__main__":

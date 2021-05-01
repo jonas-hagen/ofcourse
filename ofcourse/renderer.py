@@ -26,3 +26,9 @@ def render(template_file, environment, **kwargs):
     env = environments[environment]
     template = env.get_template(template_file)
     return template.render(**kwargs)
+
+def render_string(template_str, environment, **kwargs):
+    env = environments[environment]
+    template = env.from_string(template_str)
+    return template.render(**kwargs)
+
