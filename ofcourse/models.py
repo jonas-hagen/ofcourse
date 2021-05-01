@@ -30,7 +30,7 @@ class Contact:
         if self.channel not in self._get_channel_order():
             raise ValueError("Unknown channel " + self.channel)
         if self.is_phone:
-            phone = phonenumbers.parse(self.address, "CH")
+            phone = phonenumbers.parse(str(self.address), "CH")
             if not phonenumbers.is_valid_number(phone):
                 raise ValueError("Invalid phone number " + self.address)
             self.address = phonenumbers.format_number(
