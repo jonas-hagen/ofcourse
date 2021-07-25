@@ -167,6 +167,7 @@ def course_email(
     from email.mime.image import MIMEImage
     from email.mime.multipart import MIMEMultipart
     from email.mime.text import MIMEText
+    import email.policy
 
     with open(people_file, "r") as f:
         person_list = parsers.person_list_parser(f)
@@ -211,9 +212,9 @@ def course_email(
 
     messages = []
     for person in course.participants:
-        msg = MIMEMultipart()
+        msg = MIMEMultipart(policy=email.policy.SMTPUTF8 + email.policy.strict)
 
-        print(f"Preparing message to {person.full_name}")
+        print(f"Preparing message to {person.full_name}.")
 
         # Outer headers
         subject_prefix = "[Test] " if test_addr else ""
