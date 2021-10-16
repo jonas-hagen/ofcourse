@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ofcourse",
-    version="1.1.0",
+    version="1.2.0",
     url="",
     author="Jonas Hagen",
     author_email="jonas.hagen3@gmail.com",
