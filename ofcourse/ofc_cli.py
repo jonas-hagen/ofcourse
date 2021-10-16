@@ -212,7 +212,7 @@ def course_email(
 
     messages = []
     for person in course.participants:
-        msg = MIMEMultipart(policy=email.policy.SMTPUTF8 + email.policy.strict)
+        msg = MIMEMultipart(policy=email.policy.strict)
 
         print(f"Preparing message to {person.full_name}.")
 
