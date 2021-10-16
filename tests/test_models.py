@@ -11,11 +11,13 @@ def test_contact_phone(kind):
     assert c.address == "+41 79 123 45 67"
 
 
-def test_person():
+def test_person_age():
     c = models.Contact("mobile", "0791234567")
     p = models.Person("Alice", "Alma", "Hüntzi 3", "Bern", "3007")
     p.contact.append(c)
     p.birthdate = datetime.date(2010, 1, 5)
+    print("ID:", p.identifier)
+    assert p.age(datetime.date(2020, 1, 5)) == 10
 
 def test_person():
     c1 = models.Contact("email", "mail1@example.com")

@@ -66,6 +66,18 @@ class Person:
     def primary_email(self):
         return list(filter(lambda c: c.channel == "email", self.contact))[0].address
 
+    def age(self, date=None):
+        if not self.birthdate:
+            return None
+        if not date:
+            date = datetime.date.today()
+        age = (
+            date.year
+            - self.birthdate.year
+            - ((date.month, date.day) < (self.birthdate.month, self.birthdate.day))
+        )
+        return age
+
     @classmethod
     def key(cls, obj):
         return obj.full_name, obj.birthdate
