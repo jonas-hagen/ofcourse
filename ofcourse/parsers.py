@@ -16,13 +16,16 @@ def person_list_parser(f):
     y = yaml.YAML()
     lst = list()
     for key, p_dict in y.load(f).items():
-        if "contact" in p_dict:
-            p_dict["contact"] = contacts_to_list(p_dict["contact"])
-        if "first_name" not in p_dict:
-            p_dict["first_name"] = key.split("_")[0]
-        if "last_name" not in p_dict:
-            p_dict["last_name"] = key.split("_")[-1]
-        lst.append(models.Person(**p_dict))
+        try:
+            if "contact" in p_dict:
+                p_dict["contact"] = contacts_to_list(p_dict["contact"])
+            if "first_name" not in p_dict:
+                p_dict["first_name"] = key.split("_")[0]
+            if "last_name" not in p_dict:
+                p_dict["last_name"] = key.split("_")[-1]
+            lst.append(models.Person(**p_dict))
+        except Exception as e:
+            raise ValueError("Error while parsing '{}': {}".format(key, str(e)))
 
     return lst
 

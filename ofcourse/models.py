@@ -83,6 +83,10 @@ class Person:
         return obj.full_name, obj.birthdate
 
     def normalize(self):
+        if not self.first_name or not self.last_name:
+            raise ValueError("First or last name is not set.")
+        if not self.last_name:
+            self.first_name = ""
         if self.gender:
             if self.gender not in ("o", "f", "m"):
                 raise ValueError("Unknown gender " + self.gender)
