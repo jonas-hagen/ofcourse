@@ -46,7 +46,7 @@ class Person:
     city: str = field(default="")
     plz: str = field(repr=False, default="")
     country: str = field(default="CH")
-    birthdate: datetime.date = field(default=None)
+    birthdate: typing.Optional[datetime.date] = field(default=None)
     gender: str = field(default="")
     contact: typing.List[Contact] = field(repr=False, default_factory=list)
     notes: typing.List[str] = field(repr=False, default_factory=list)
@@ -109,8 +109,8 @@ class Person:
 @dataclass
 class Course:
     title: str
-    first_date: datetime.date = field(default=None)
-    last_date: datetime.date = field(default=None)
+    first_date: typing.Optional[datetime.date] = field(default=None)
+    last_date: typing.Optional[datetime.date] = field(default=None)
     number: int = field(repr=False, default=0)
     code: str = field(default="")
     costs: float = field(default=0)

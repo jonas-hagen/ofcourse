@@ -128,7 +128,8 @@ def course_render(
 
 @course_group.command("email")
 @click.argument(
-    "subject", type=str,
+    "subject",
+    type=str,
 )
 @click.argument(
     "course-file", type=click.Path(exists=True, dir_okay=False, resolve_path=True)
@@ -148,13 +149,21 @@ def course_render(
 )
 @click.option("--send/--no-send", default=False)
 @click.option(
-    "--from", "-f", "from_addr", required=True, help="The From address.",
+    "--from",
+    "-f",
+    "from_addr",
+    required=True,
+    help="The From address.",
 )
 @click.option(
-    "--attach", "-a", required=False, multiple=True, help="File(s) to attach.",
+    "--attach",
+    "-a",
+    required=False,
+    multiple=True,
+    help="File(s) to attach.",
 )
 def course_email(
-        subject, course_file, template_file, people_file, test_addr, send, from_addr, attach
+    subject, course_file, template_file, people_file, test_addr, send, from_addr, attach
 ):
     import os
     import smtplib
@@ -209,7 +218,6 @@ def course_email(
         part.add_header("Content-Disposition", "attachment", filename=filename_base)
         return part
 
-
     messages = []
     for person in course.participants:
         msg = MIMEMultipart(policy=email.policy.strict)
@@ -255,7 +263,6 @@ def course_email(
         smtp.close()
     else:
         print("NOT sending messages")
-
 
 
 if __name__ == "__main__":
