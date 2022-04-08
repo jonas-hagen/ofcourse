@@ -47,6 +47,7 @@ class Person:
     plz: str = field(repr=False, default="")
     country: str = field(default="CH")
     birthdate: typing.Optional[datetime.date] = field(default=None)
+    ahv_number: typing.Optional[str] = field(default=None)
     gender: str = field(default="")
     contact: typing.List[Contact] = field(repr=False, default_factory=list)
     notes: typing.List[str] = field(repr=False, default_factory=list)
